@@ -362,5 +362,3 @@
 ;;     (read-record
 ;;      (hbase/scanner (as-table table)
 ;; 		    (make-scan filter)))))
-
-

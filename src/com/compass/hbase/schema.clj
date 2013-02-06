@@ -41,7 +41,7 @@
 
 ;;
 ;; Schema accessors
-;; 
+;;
 
 (def row-default :string)
 (def qualifier-default :keyword)
@@ -74,12 +74,12 @@
     (if-let [type (schema-metadata schema :key-type)]
       type
       qualifier-default)))
-	     
+
 (defn- family-value-type [family qualifier]
-  (or (and (:exceptions family) 
+  (or (and (:exceptions family)
 	   ((:exceptions family) qualifier))
       (:value-type family)))
-   
+
 (defn- value-type
   [schema family qualifier]
   (check-schema schema)
@@ -115,7 +115,7 @@
 
 (defn- valid-exception-map? [type emap]
   (cond (nil? emap) true
-	(nil? type) 
+	(nil? type)
 	(throw (java.lang.Error. "Families with exceptions must specify key-type"))
 	(not (every? (partial matching-type? type) (keys emap)))
 	(throw (java.lang.Error. "Exception keys must match family key-type"))))
@@ -132,7 +132,7 @@
 	       :value-type (second fspec)})
 	true (throw (java.lang.Error.
 		     (str "Unknown family " fspec " for family " fam)))))
-  
+
 (defn canonical-families [spec]
   (reduce canonical-family-spec (hash-map) (partition 2 spec)))
 
@@ -259,7 +259,7 @@
 	   (recur (next kvs)
 		  (assoc-in kv-map [family qualifier timestamp] value)))
 	 kv-map))]))
-			      
+
 (defn decode-latest
   "Given an HBase Result object, decode the latest versions of all the
    available columns"
@@ -279,16 +279,16 @@
 	 ;; At this point, we have a duplicate-less list of [f q] keys in keys.
 	 ;; Go back through, pulling the latest values for these keys.
 	 (loop [remaining-keys keys
-		kv-map {}]
+            kv-map {}]
 	   (if-let [[family qualifier] (first remaining-keys)]
 	     (let [keyfam (decode-value family :keyword)
-		   qual (with-robust-decode [:qualifier result]
-			  (decode-value qualifier (qualifier-type schema keyfam)))]
+               qual (with-robust-decode [:qualifier result]
+                      (decode-value qualifier (qualifier-type schema keyfam)))]
 	       (recur (next remaining-keys)
-		      (assoc-in kv-map [keyfam qual]
-				(let [value (.getValue result family qualifier)]
-				  (if (> (count value) 0)
-				    (with-robust-decode [:cell result]
-				      (decode-value value (value-type schema keyfam qual)))
-				    nil)))))
+                  (assoc-in kv-map [keyfam qual]
+                            (let [value (.getValue result family qualifier)]
+                              (if (> (count value) 0)
+                                (with-robust-decode [:cell result]
+                                  (decode-value value (value-type schema keyfam qual)))
+                                nil)))))
 	     kv-map))))]))
