@@ -124,6 +124,25 @@
 (defn put-one [table row family column value]
   (put table row [[family column value]]))
 
+(defn check-and-put
+  "Check a cell for a given value, and put our new value if the value
+   matches. Returns a boolean indicating whether or not the value was
+   written. A nil check-value indicates that the test should be for
+   existence."
+  ([table row family column check-value new-value]
+     (with-table [table table]
+       (let [schema (table-schema table)
+             put (make-put schema row [[family column new-value]])]
+         (io! (.checkAndPut table
+                            (encode-row schema row)
+                            (encode-family schema family)
+                            (encode-column schema family column)
+                            (and check-value
+                                 (encode-cell schema family column check-value))
+                            put)))))
+  ([table row family column value]
+     (check-and-put table row family column value value)))
+
 ;; =========================================
 ;; SINGLE ROW DELETES
 ;; =========================================
