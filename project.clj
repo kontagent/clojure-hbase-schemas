@@ -1,4 +1,4 @@
-(defproject com.compasslabs/clojure-hbase-schemas "0.92.2.0"
+(defproject com.compasslabs/clojure-hbase-schemas "0.92.2.0-SNAPSHOT"
   :description "A convenient Clojure interface to HBase."
   :license "See LICENSE file"
   :url "http://github.com/compasslabs/clojure-hbase-schemas"
