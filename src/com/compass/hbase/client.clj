@@ -103,10 +103,10 @@
 	put (new Put rowbytes)]
     (if (map? values)
       (doseq [[family cols] values]
-	(doseq [[col value] cols]
-	  (put-add put schema family col value)))
+        (doseq [[col value] cols]
+          (put-add put schema family col value)))
       (doseq [[family col value] values]
-	(put-add put schema family col value)))
+        (put-add put schema family col value)))
     put))
 
 (defn put
@@ -118,7 +118,7 @@
   [table row values & opts]
   (with-table [table table]
     (let [schema (table-schema table) ;; NOTE: or from schema argument
-	  p (make-put schema row values)]
+          p (make-put schema row values)]
       (io! (.put table p)))))
 
 (defn put-one [table row family column value]
