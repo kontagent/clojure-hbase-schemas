@@ -7,7 +7,7 @@ lifts support for HTable admin functions directly from his library.
 
 Releases are maintained on clojars.  The latest release is:
 
-    com.compasslabs/clojure-hbase-schemas "0.90.4"
+    com.compasslabs/clojure-hbase-schemas "0.92.2.0-SNAPSHOT"
 
 ## Description
 
@@ -36,7 +36,7 @@ specific qualifier exceptions or a seq of two values, the key and
 value types.  If one or more are not specified, the table or global
 defaults will be used.
 
-    (define-schema :users [:key-type :string 
+    (define-schema :users [:key-type :string
                            :value-type :json-key
     	       	           :row-type :long]
        :userinfo {:value-type :json-key
@@ -71,6 +71,7 @@ Additional commands are straightforward
     (client/del :users 100) => fmap
     (client/get-multi :users [100 101 102]) => [fmap fmap fmap]
     (client/put-multi :users [[100 fmap] [200 fmap]])
+    (client/check-and-put :users 100 :userinfo :name "Test User" "Better Test User") => true
     (client/scan (fn [id fmap] fmap) :users) => [fmap, fmap, ...]
     (client/do-scan (fn [id fmap] fmap) :users) => [fmap, fmap, ...]
     (client/raw-scan (fn [id fmap] fmap) :users) => [ResultSet, ...]
